@@ -1,0 +1,880 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Calibri;}{\f2\fnil\fcharset1 Cambria Math;}{\f3\fnil\fcharset0 Cambria Math;}{\f4\fnil Cambria Math;}{\f5\fnil\fcharset1 Segoe UI Symbol;}{\f6\fnil Segoe UI Symbol;}{\f7\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mmathFont2\mwrapIndent1440 }\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\qc\b\f0\fs28\lang9 Module 12: Installation, Storage, and Compute\par
+with Windows Server\par
+
+\pard\sa200\sl276\slmult1\qj 1. What two options are provided in the type of installation window during Windows\par
+Server 2016 installation?\par
+\b0 Ans. \b Server Core Installation\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. A minimal installation with no GUI (Graphical User Interface).\par
+{\pntext\f7\'B7\tab}2. Provides only a command-line interface and PowerShell.\par
+{\pntext\f7\'B7\tab}3. Uses fewer resources and has a smaller attack surface, making it more secure.\par
+
+\pard\sa200\sl276\slmult1\qj\b Server with Desktop Experience (Full Installation)\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. the full GUI (Graphical User Interface) similar to Windows 10.\par
+{\pntext\f7\'B7\tab}2. Easier for administrators who prefer graphical tools.\par
+{\pntext\f7\'B7\tab}3. Consumes more system resources compared to Server Core.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Write the step How to configure server step by step?\par
+\b0 Ans. Windows Server 2016 \f1\endash  Initial Configuration Steps\par
+\b Sign in & rename the server\b0\par
+\f0\lang1033 1. \f1\lang9 GUI: Server Manager \f2\u8594?\f1  \f0 Local Server \f2\u8594?\f1  \f0 Computer name \f2\u8594?\f1  \f0 Change\'85 \f2\u8594?\f1  \f0 set name \f2\u8594?\f1  \f0 Restart.\par
+\b PowerShell:\b0\par
+1. Rename-Computer -NewName "SRV-APP01" -Restart\par
+2. Set a static IP & DNS\par
+3. GUI: Control Panel \f2\u8594?\f1  \f0 Network and Sharing Center \f2\u8594?\f1  \f0 Change adapter settings \f2\u8594?\f1  \f0 Ethernet \f2\u8594?\f1  \f0 Properties \f2\u8594?\f1  \f0 IPv4.\par
+\b PowerShell:\b0\par
+1. New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.10 -PrefixLength 24 -DefaultGateway 192.168.1.1\par
+2. Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses 192.168.1.10,8.8.8.8\par
+3. Set time zone & NTP\par
+4. GUI: Date & time settings \f2\u8594?\f1  \f0 Time zone.\par
+\b PowerShell:\b0\par
+1. tzutil /s "India Standard Time"\par
+2.w32tm/config/syncfromflags:manual /manualpeerlist:"time.windows.com" /updatew32tm /resync\par
+3. Enable Remote Desktop (if needed)\par
+4. GUI: Server Manager \f2\u8594?\f1  \f0 Local Server \f2\u8594?\f1  \f0 Remote Desktop \f2\u8594?\f1  \f0 Enable.\par
+\b PowerShell:\b0\par
+1. Set-ItemProperty 'HKLM:\\System\\CurrentControlSet\\Control\\Terminal Server' -Name "fDenyTSConnections" -Value 0\par
+2. Enable-NetFirewallRule -DisplayGroup "Remote Desktop"\par
+3. Windows Update & activation\par
+4. GUI: Settings \f2\u8594?\f1  \f0 Update & security \f2\u8594?\f1  \f0 Check for updates, then System \f2\u8594?\f1  \f0 About \f2\u8594?\f1  \f0 Activate.\par
+5. Core servers: run sconfig and choose the Update/Activation options.\par
+6. Configure Windows Firewall (profiles/rules)\par
+7. GUI: Windows Firewall with Advanced Security.\par
+\b PowerShell:\b0\par
+1. Get-NetFirewallProfile | Set-NetFirewallProfile -Enabled True\par
+2. Install required roles & features\par
+3. GUI: Server Manager \f2\u8594?\f1  \f0 Add roles and features.\par
+\b PowerShell (examples):\b0\par
+1.Install-WindowsFeature AD-Domain-Services, DNS -IncludeManagementTools\par
+2. Install-WindowsFeature DHCP -IncludeManagementTools\par
+3. Install-WindowsFeature FS-FileServer\par
+4. Install-WindowsFeature Web-Server -IncludeManagementTools\par
+5. Install-WindowsFeature Windows-Server-Backup\par
+6. If this server will be a Domain Controller (AD DS)\par
+7. Promote to Domain Controller\par
+8. GUI: In Server Manager, after AD DS install \f2\u8594?\f1  \f0 Promote this server to a domain controller \f2\u8594?\f1  \f0 choose:\par
+\b PowerShell (new forest example):\par
+\b0 1.Install-ADDSForest -DomainName "corp.local" -SafeModeAdministratorPassword (Read-Host -AsSecureString)\par
+2. DNS basics\par
+3. In DNS Manager, set Forwarders to your ISP/public DNS (e.g., 8.8.8.8).\par
+\b PowerShell:\b0\par
+1. Add-DnsServerForwarder -IPAddress 8.8.8.8\par
+2. Create users & groups\par
+3. GUI: Active Directory Users and Computers (dsa.msc).\par
+\b PowerShell:\b0\par
+1.New-ADUser -Name "Harshita Kumawat" -SamAccountName hkumawat -AccountPassword (Read-Host -AsSecureString) -Enabled $true\par
+2.New-ADGroup "App-Admins" -GroupScope Global -Path "CN=Users,DC=corp,DC=local"\par
+3. Add-ADGroupMember "App-Admins" hkumawat\par
+4. Join member servers/PCs to the domain\par
+5. GUI: System Properties \f2\u8594?\f1  \f0 Change \f2\u8594?\f1  \f0 Domain: corp.local \f2\u8594?\f1  \f0 enter domain creds \f2\u8594?\f1  \f0 Restart.\par
+\b PowerShell (on the member computer):\par
+\b0 1. Add-Computer -DomainName corp.local -Restart\par
+2. If this server will be DHCP\par
+3. Authorize DHCP & create scope\par
+4. GUI: DHCP Manager \f2\u8594?\f1  \f0 Right-click server \f2\u8594?\f1  \f0 Authorize; then IPv4 \f2\u8594?\f1  \f0 New Scope.\par
+\b PowerShell:\b0\par
+1.Add-DhcpServerInDC -DnsName "srv-dc01.corp.local" -IpAddress 192.168.1.10\par
+2. Add-DhcpServerv4Scope -Name "LAN" -StartRange 192.168.1.100 -EndRange 192.168.1.200 -SubnetMask 255.255.255.0\par
+3. Set-DhcpServerv4OptionValue -OptionId 3 -Value 192.168.1.1\par
+4. Set-DhcpServerv4OptionValue -OptionId 6 -Value 192.168.1.10\par
+5. Set-DhcpServerv4OptionValue -OptionId 15 -Value "corp.local"\par
+6. If this server will be a File Server\par
+7. Create data volume & NTFS permissions\par
+8. GUI: Disk Management \f2\u8594?\f1  \f0 initialize/format \f2\u8594?\f1  \f0 assign drive letter.\par
+9. Create folders (e.g., D:\\Shares\\Dept). Set NTFS: Properties \f2\u8594?\f1  \f0 Security (use groups, not users).\par
+10. Create SMB shares\par
+11. GUI: Server Manager \f2\u8594?\f1  \f0 File and Storage Services \f2\u8594?\f1  \f0 Shares \f2\u8594?\f1  \f0 New Share.\par
+\b PowerShell:\b0\par
+1. New-SmbShare -Name "Dept" -Path "D:\\Shares\\Dept" -FullAccess "DOMAIN\\App-Admins" -ChangeAccess "DOMAIN\\Dept-Users"\par
+2. If this server will be IIS (Web Server)\par
+3. Add site & bindings\par
+4. GUI: IIS Manager \f2\u8594?\f1  \f0 Sites \f2\u8594?\f1  \f0 Add Website\'85 (set path, port 80/443, host name).\par
+5. Import/assign SSL cert under Server Certificates and in Bindings for HTTPS.\par
+6. Baseline hardening & housekeeping\par
+7. Group Policy: Create baseline GPOs (password/lockout, firewall, audit, WSUS, RDP restrictions) via gpmc.msc.\par
+8. Backups: Install Windows Server Backup, schedule daily backup incl. System State.\par
+\b PowerShell:\b0\par
+1. wbadmin enable backup -addtarget:{{\field{\*\fldinst{HYPERLINK "\\\\\\\\NAS\\\\Backups\\\\SRV-APP01"}}{\fldrslt{\\\\NAS\\Backups\\SRV-APP01\ul0\cf0}}}}\f0\fs28  -include:C:,SystemState -schedule:21:00 -quiet\par
+2. Monitoring & logs: Configure Event Forwarding, set performance counters/alerts.\par
+3. Anti-malware: Deploy Defender or your enterprise AV.\par
+4. Documentation: Record hostname, IPs, roles, admin accounts, backup plan, and change log.\par
+\b 3\f3 . \f0 What\f3  \f0 are\f3  \f0 the\f3  \f0 Pre\f3  \f0 installation\f3  \f0 tasks\f3 ?\b0\par
+Ans. Check hardware requirements\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. CPU: 1.4 GHz (64-bit) or higher\par
+{\pntext\f7\'B7\tab}2. RAM: Minimum 512 MB (2 GB recommended for GUI)\par
+{\pntext\f7\'B7\tab}3. Disk: At least 32 GB free space\par
+
+\pard\sa200\sl276\slmult1\qj\b Decide server edition & installation type\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Standard / Datacenter\par
+{\pntext\f7\'B7\tab}2. Server Core / Server with Desktop Experience\par
+
+\pard\sa200\sl276\slmult1\qj\b Check compatibility\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Ensure hardware drivers are supported\par
+{\pntext\f7\'B7\tab}2. Verify applications/software support Windows Server 2016\par
+
+\pard\sa200\sl276\slmult1\qj\b Plan server role\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Example: Domain Controller, DNS, DHCP, File Server, Web Server, etc.\par
+
+\pard\sa200\sl276\slmult1\qj\b Plan network settings\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 2. Decide IP address, subnet mask, gateway, and DNS server\par
+
+\pard\sa200\sl276\slmult1\qj\b Backup important data\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 3. Backup existing data from the machine (if reused)\par
+
+\pard\sa200\sl276\slmult1\qj\b Check firmware/BIOS settings\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Enable virtualization (if Hyper-V required)\par
+{\pntext\f7\'B7\tab}2. Set correct boot order (DVD/USB/ISO first)\par
+
+\pard\sa200\sl276\slmult1\qj\b Collect installation media & product key\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Windows Server 2016 ISO/DVD/USB\b\par
+{\pntext\f7\'B7\tab}\b0 2. License key for activation\par
+
+\pard\sa200\sl276\slmult1\qj\b Ensure power & connectivity\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Reliable power (UPS recommended)\par
+{\pntext\f7\'B7\tab}2. Stable network connection if joining domain or downloading updates\f0\par
+
+\pard\sa200\sl276\slmult1\qj\b\f3 4. What are the Post installation tasks?\par
+\b0 Ans.\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Install latest updates \f2\u8594? Run Windows Update.\par
+{\pntext\f7\'B7\tab}\f3\lang1033 2. \f4 Set strong Administrator password.\par
+{\pntext\f7\'B7\tab}\f3 3. \f4 Rename the server (from default name).\par
+{\pntext\f7\'B7\tab}\f3 4. \f4 Assign static IP address & DNS settings.\par
+{\pntext\f7\'B7\tab}\f3 5. \f4 Activate Windows with product key.\par
+{\pntext\f7\'B7\tab}\f3 6. \f4 Configure date, time & time zone.\par
+{\pntext\f7\'B7\tab}\f3 7. \f4 Enable Remote Desktop (if needed).\par
+{\pntext\f7\'B7\tab}\f3 8. \f4 Configure Windows Firewall settings.\par
+{\pntext\f7\'B7\tab}\f3 9. \f4 Install required server roles/features (e.g., AD DS, DHCP, IIS).\par
+{\pntext\f7\'B7\tab}\f3 10. \f4 Promote to Domain Controller (if AD planned).\par
+{\pntext\f7\'B7\tab}\f3 11. \f4 Set up user accounts & groups.\par
+{\pntext\f7\'B7\tab}\f3 12. \f4 Configure storage, shares, and NTFS permissions.\par
+{\pntext\f7\'B7\tab}\f3 13. \f4 Set up backup & recovery plan.\par
+{\pntext\f7\'B7\tab}\f3 14. \f4 Apply security policies & Group Policy settings.\par
+{\pntext\f7\'B7\tab}\f3 15. \f4 Document server configuration for future reference.\f0\par
+
+\pard\sa200\sl276\slmult1\qj\b 5\f3 . \f0 What\f3  \f0 is\f3  \f0 the\f3  \f0 standard\f3  \f0 upgrade\f3  \f0 path\f3  \f0 for\f3  \f0 Windows\f3  \f0 Server\f3 ?\b0\f0\par
+Ans.The\f3  \f0 standard\f3  \f0 upgrade\f3  \f0 path\f3  \f0 for\f3  \f0 Windows\f3  \f0 Server\f3  \f0 means\f3  \f0 which\f3  \f0 versions\f3  \f0 you\f3  \f0 can\f3  \f0 upgrade\f3  \f0 in\f3 -\f0 place\f3  (\f0 keeping\f3  \f0 data\f3 /\f0 apps\f3 ) \f0 to\f3  \f0 a\f3  \f0 newer\f3  \f0 version\f3 .\f0\par
+\b For\f3  \f0 Windows\f3  \f0 Server\f3  \f0 2016\f3 , \f0 the\f3  \f0 upgrade\f3  \f0 paths\f3  \f0 are\f3 :\f0\par
+Supported\f3  \f0 In\f3 -\f0 Place\f3  \f0 Upgrades\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Windows\f3  \f0 Server\f3  \f0 2012\f3  \f2\u8594? Windows Server 2016\par
+{\pntext\f7\'B7\tab}\f3\lang1033 2. \f4 Windows Server 2012 R2 \f2\u8594? Windows Server 2016\par
+
+\pard\sa200\sl276\slmult1\qj\b\f0 Not\f3  \f0 Supported\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Direct\f3  \f0 upgrade\f3  \f0 from\f3  \f0 Windows\f3  \f0 Server\f3  \f0 2008\f3  / \f0 2008\f3  \f0 R2\f3  \f2\u8594? 2016 (you must first upgrade to 2012/2012 R2, then to 2016).\par
+{\pntext\f7\'B7\tab}\f3\lang1033 2. \f4 Upgrade from 32-bit to 64-bit \f2\u8594? not supported.\par
+{\pntext\f7\'B7\tab}\f3\lang1033 3. \f4 Upgrade from one edition to a lower edition (like Datacenter \f2\u8594? Standard) \u8594? not supported.\par
+
+\pard\sa200\sl276\slmult1\qj\f0 Edition\f3  \f0 Upgrades\f3  (\f0 same\f3  \f0 version\f3 )\f0\par
+Within\f3  \f0 Windows\f3  \f0 Server\f3  \f0 2016\f3  \f0 itself\f3 , \f0 you\f3  \f0 can\f3  \f0 upgrade\f3  \f0 edition\f3  \f0 by\f3  \f0 using\f3 :\par
+\b powershell:\f0\par
+\b0 1. DISM\f3  /\f0 online\f3  /\f0 Set\f3 -\f0 Edition\f3 :\f0 ServerDatacenter\f3  /\f0 ProductKey\f3 :\f0 XXXXX\f3 -\f0 XXXXX\f3 -\f0 XXXXX\f3 -\f0 XXXXX\f3 -\f0 XXXXX\f3  /\f0 AcceptEula\par
+\f3 (\f0 for\f3  \f0 Standard\f3  \f2\u8594? Datacenter)\par
+\b 6. What is the Physical structure of AD?\par
+\b0\f3\lang1033 Ans.Physical Structure of AD:\par
+\b Domain Controllers (DCs)\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Servers that store a copy of the Active Directory database.\par
+{\pntext\f7\'B7\tab}2. Handle authentication, replication, and directory services.\par
+
+\pard\sa200\sl276\slmult1\qj\b Sites\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Represents the physical location (like offices, branches, data centers).\par
+{\pntext\f7\'B7\tab}2. A site is defined by one or more IP subnets.\par
+{\pntext\f7\'B7\tab}3. Helps control replication traffic between DCs in different locations.\par
+
+\pard\sa200\sl276\slmult1\qj\b Subnets\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Used to map IP addresses to AD sites.\par
+{\pntext\f7\'B7\tab}2. Ensures clients authenticate with the nearest DC to improve performance.\par
+
+\pard\sa200\sl276\slmult1\qj\b Site Links\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Define the network connection between two or more sites.\par
+{\pntext\f7\'B7\tab}2. Control replication schedule and cost (bandwidth usage).\b\f0\par
+
+\pard\sa200\sl276\slmult1\qj\f3 7. What is the Logical components of Active Directory?\par
+\b0 Ans. Logical Components of AD:\par
+\b Forest \b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. The topmost logical container.\par
+{\pntext\f7\'B7\tab}2. A collection of one or more domain trees that share a common schema, configuration, and global catalog.\par
+
+\pard\sa200\sl276\slmult1\qj\b Domain\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. A logical group of objects (users, computers, groups) sharing the same namespace (e.g., corp.local).\par
+{\pntext\f7\'B7\tab}2. Acts as a security boundary for policies and authentication.\par
+
+\pard\sa200\sl276\slmult1\qj\b Tree\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. A collection of one or more domains in a hierarchical structure.\par
+{\pntext\f7\'B7\tab}2. Domains in a tree share a contiguous namespace (e.g., corp.local, sales.corp.local).\par
+
+\pard\sa200\sl276\slmult1\qj\b Organizational Units (OUs)\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Containers within a domain used to group objects (users, computers, groups).\par
+{\pntext\f7\'B7\tab}2. Allow delegation of administration and application of Group Policies.\par
+
+\pard\sa200\sl276\slmult1\qj\b Objects\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. The basic elements stored in AD (users, computers, groups, printers, etc.).\par
+{\pntext\f7\'B7\tab}2. Each object has attributes (like username, password, email).\par
+
+\pard\sa200\sl276\slmult1\qj\b Global Catalog \b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. A distributed data repository that contains a searchable index of all objects in a forest.\par
+{\pntext\f7\'B7\tab}2. Helps users find resources across domains\b\f0\par
+
+\pard\sa200\sl276\slmult1\qj\lang9 8. What is the Full form Of LDAP?\par
+\b0 Ans.Lightweight Directory Access Protocol.\par
+\b 9. What is the location of the AD database?\par
+\b0 Ans.Default location:\par
+1. Default location: C:\\Windows\\NTDS\\NTDS.dit \par
+\b 10. What is child DC?\par
+\b0 Ans. \b Key Points:\b0\par
+\b Child Domain\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. A domain that is subordinate to a parent domain.\par
+{\pntext\f7\'B7\tab}2. Shares part of the namespace of the parent (e.g., Parent: corp.local, Child: sales.corp.local).\par
+
+\pard\sa200\sl276\slmult1\qj\b Child DC\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. A domain controller installed in the child domain.\par
+{\pntext\f7\'B7\tab}2. Handles authentication, replication, and directory services for that child domain.\par
+{\pntext\f7\'B7\tab}3. Replicates data with the parent domain controllers and other DCs in the child domain.\par
+
+\pard\sa200\sl276\slmult1\qj\b Purpose\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Helps organize large organizations with multiple departments or locations.\par
+{\pntext\f7\'B7\tab}2. Provides local authentication and reduces cross-network traffic to parent DCs.\par
+
+\pard\sa200\sl276\slmult1\qj\b 11. Explain the term forest in AD?\par
+\b0 Ans. In Active Directory (AD), a forest is the topmost logical container that holds one or more domain trees which share a common schema, configuration, and global catalog.\par
+\b Key Points:\b0\par
+1. Highest-level structure in AD hierarchy.\par
+\b 2.Domains in a forest can have different namespaces but share:\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Schema\b  \b0 (defines object types & attributes)\par
+{\pntext\f7\'B7\tab}2. Configuration (replication and topology info)\par
+{\pntext\f7\'B7\tab}3. Global Catalog (for searching objects across domains)\par
+
+\pard\sa200\sl276\slmult1\qj\b 3.Trust relationships:\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Domains within a forest automatically trust each other (two-way transitive trust).\par
+
+\pard\sa200\sl276\slmult1\qj\b 4.Purpose:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 2. Enables centralized management and resource sharing across multiple domains\par
+
+\pard\sa200\sl276\slmult1\qj\b 12. What is Active Directory? Check all that apply?\par
+\f5\u9679?\f1  \f0 An open-source directory server\par
+\f5\u9679?\f1  \f0 A Windows-only implementation of a directory server\par
+\f5\u9679?\f1  \f0 Microsoft's implementation of a directory server\par
+\f5\u9679?\f1  \f0 An LDAP-compatible directory server\par
+\b0 Ans.The correct answers are:\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. A Windows-only implementation of a directory server.\par
+{\pntext\f7\'B7\tab}2. Microsoft's implementation of a directory server.\par
+{\pntext\f7\'B7\tab}3. An LDAP-compatible directory server.\par
+
+\pard\sa200\sl276\slmult1\qj\b 13. When you create an Active Directory domain, what's the name of the default user?\par
+account?\par
+\f5\u9679?\f1  \f0 Superuser\par
+\f5\u9679?\f1  \f0 Root\par
+\f5\u9679?\f1  \f0 Username\par
+\f5\u9679?\f1  \f0 Administrator\par
+\b0 Ans.The correct answer is:\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Administrator\b\par
+
+\pard\sa200\sl276\slmult1\qj 14. AD domain provides which of the following advantages? Check all that apply?\par
+\f5\u9679?\f1  \f0 Centralized authentication\par
+\f5\u9679?\f1  \f0 More detailed logging\par
+\f5\u9679?\f1  \f0 Centralized management with GPOs\par
+\f5\u9679?\f1  \f0 Better performance\par
+\b0 Ans.The correct answers are:\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Centralized authentication.\par
+{\pntext\f7\'B7\tab}2. More detailed logging.\par
+{\pntext\f7\'B7\tab}3. Centralized management with GPOs.\b\par
+
+\pard\sa200\sl276\slmult1\qj 15. What are the minimum hardware requirements for installing Windows Server 2016?\par
+\b0 Ans.\f6\par
+\b\f0 Processor (CPU):\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. 1.4 GHz 64-bit processor\par
+{\pntext\f7\'B7\tab}2. Must support x64 architecture\par
+{\pntext\f7\'B7\tab}3. Must support NX (No-Execute Bit), DEP, CMPXCHG16b, LAHF/SAHF, and PrefetchW\par
+{\pntext\f7\'B7\tab}4. Must support Second Level Address Translation (SLAT) (for Hyper-V)\b\par
+
+\pard\sa200\sl276\slmult1\qj RAM (Memory):\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Minimum: 512 MB (with Desktop Experience, at least 2 GB)\par
+{\pntext\f7\'B7\tab}2. For installation via network, at least 800 MB\par
+
+\pard\sa200\sl276\slmult1\qj\b Storage (Disk Space):\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Minimum: 32 GB\par
+{\pntext\f7\'B7\tab}2. If the system has more than 16 GB RAM, more disk space is needed for paging, hibernation, and dump files\par
+
+\pard\sa200\sl276\slmult1\qj\b Network:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Ethernet adapter with at least 1 gigabit per second throughput\par
+{\pntext\f7\'B7\tab}2. Must be PCI Express compliant\par
+
+\pard\sa200\sl276\slmult1\qj\b Other requirements:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. DVD drive (if installing from DVD media)\par
+{\pntext\f7\'B7\tab}2. UEFI 2.3.1c-based system and firmware supporting Secure Boot\par
+{\pntext\f7\'B7\tab}3. Super VGA (1024 \'d7 768) or higher resolution monitor\par
+{\pntext\f7\'B7\tab}4. Keyboard and mouse\b\par
+
+\pard\sa200\sl276\slmult1\qj 16. Explain the different editions of Windows Server 2016 and their features?\par
+\b0 Ans.\b 1. Windows Server 2016 Datacenter Edition\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 1. Best for: Large enterprises and data centers with highly virtualized & cloud environments.\par
+
+\pard\sa200\sl276\slmult1\qj\b Key Features:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Unlimited virtualization rights (run unlimited VMs with Hyper-V)\par
+{\pntext\f7\'B7\tab}2. Storage Spaces Direct (high-performance, fault-tolerant storage clusters)\par
+{\pntext\f7\'B7\tab}3. Storage Replica (block-level replication for disaster recovery)\par
+{\pntext\f7\'B7\tab}4. Shielded Virtual Machines (protect VMs from unauthorized access)\par
+{\pntext\f7\'B7\tab}5. Software-defined networking\par
+{\pntext\f7\'B7\tab}6. Advanced security features (Just Enough Administration, Device Guard, etc.)\par
+{\pntext\f7\'B7\tab}7. Full support for containers (Windows Server & Hyper-V containers)\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Windows Server 2016 Standard Edition\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Best for: Small to medium businesses or environments with low to\par
+{\pntext\f7\'B7\tab}2. moderate virtualization needs.\par
+
+\pard\sa200\sl276\slmult1\qj\b Key Features:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Includes all core Windows Server 2016 features (Active Directory, DNS, DHCP, etc.)\par
+{\pntext\f7\'B7\tab}2. Virtualization rights limited \f2\u8594?\f1  \f0 2 VMs per license (plus 1 Hyper-V host)\par
+{\pntext\f7\'B7\tab}3. Supports Windows Server containers\par
+{\pntext\f7\'B7\tab}4. No Storage Spaces Direct or Shielded VM features (Datacenter-only)\par
+{\pntext\f7\'B7\tab}5. Lower cost than Datacenter\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Windows Server 2016 Essentials Edition\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Best for: Small businesses (up to 25 users and 50 devices).\par
+
+\pard\sa200\sl276\slmult1\qj\b Key Features:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Simplified management through a dashboard\par
+{\pntext\f7\'B7\tab}2. No virtualization rights (Hyper-V role not supported)\par
+{\pntext\f7\'B7\tab}3. Pre-configured with features useful for small orgs (file/print sharing, remote access)\par
+{\pntext\f7\'B7\tab}4. Lower hardware requirements than other editions\par
+{\pntext\f7\'B7\tab}5. Easier setup but fewer advanced features\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Windows Server 2016 MultiPoint Premium Server (less common)\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Best for: Educational environments (classrooms, labs).\par
+
+\pard\sa200\sl276\slmult1\qj\b Key Features:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj 1. Allows multiple users to connect to one computer using multiple stations\par
+{\pntext\f7\'B7\tab}2. Centralized management for multi-user classrooms/labs\par
+{\pntext\f7\'B7\tab}3. Designed for cost-effective deployment in education\lang9\par
+
+\pard\sa200\sl276\slmult1\qj\b 17. Walk through the steps of installing Windows Server 2016 using GUI mode\b0\lang1033 ?\par
+Ans. Steps to Install Windows Server 2016 (GUI Mode)\par
+\b Step 1: Boot from Installation Media\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Insert the Windows Server 2016 DVD/USB or mount the ISO (if on a VM).\par
+{\pntext\f7\'B7\tab}b. Boot the system and press any key when prompted.\par
+{\pntext\f7\'B7\tab}c. Windows Setup will load files.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 2: Select Language and Preferences\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. On the Windows Setup screen, choose:\par
+{\pntext\f7\'B7\tab}b. Language to install\par
+{\pntext\f7\'B7\tab}c. Time and currency format\par
+{\pntext\f7\'B7\tab}d. Keyboard or input method\par
+{\pntext\f7\'B7\tab}e. Click Next \f2\u8594?\f1  \f0 Click Install Now.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 3: Enter Product Key\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Enter your product key if available.\par
+{\pntext\f7\'B7\tab}b. If not, click I don\f4\rquote\f0 t have a product key to continue with evaluation mode.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 4: Select Edition and Installation Type\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 a. Choose the edition you want to install:\par
+{\pntext\f7\'B7\tab}b.Windows Server 2016 Standard (Desktop Experience)\par
+{\pntext\f7\'B7\tab}c. Windows Server 2016 Datacenter (Desktop Experience)\par
+{\pntext\f7\'B7\tab}d. Make sure to select Desktop Experience if you want GUI mode (otherwise, it installs Server Core without GUI).\par
+{\pntext\f7\'B7\tab}e. Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 5: Accept License Terms\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Check I accept the license terms.\par
+{\pntext\f7\'B7\tab}b. Click Next\i\lang1033 .\i0\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 6: Choose Installation Type\b0\par
+\b  Select:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Custom: Install Windows only (advanced) \f2\u8594?\f1  \f0 for fresh installation (Upgrade is only for existing installations, usually skipped in fresh installs)\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 7: Select Disk Partition\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 a. Sele\lang1033 ct the disk/partition where you want to install Windows Server 2016.\par
+{\pntext\f7\'B7\tab}b. Format or delete/create partitions if needed.\par
+{\pntext\f7\'B7\tab}c. Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 8: Installation Process\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 a. Windows will copy files, install features, and configure settings.\par
+{\pntext\f7\'B7\tab}b. System will reboot automatically several times.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 9: Initial Configuration.\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. After reboot, set a strong Administrator password.\par
+{\pntext\f7\'B7\tab}b. Press Finish or OK.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 10: First Login\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Press Ctrl + Alt + Delete to sign in.\par
+{\pntext\f7\'B7\tab}b. Enter Administrator password.\par
+{\pntext\f7\'B7\tab}c. Windows Server 2016 Desktop (GUI mode) will load.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 11: Post-Installation Configuration\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 a. Configure server settings using Server Manager:\par
+{\pntext\f7\'B7\tab}b. Set computer name\par
+{\pntext\f7\'B7\tab}c. Configure IP address\par
+{\pntext\f7\'B7\tab}e. Enable Remote Desktop\par
+{\pntext\f7\'B7\tab}f. Install roles/features (like Active Directory, DNS, DHCP, etc.)\par
+
+\pard\sa200\sl276\slmult1\qj\b 18. Describe the steps for installing Windows Server 2016 in Server Core mode?\par
+Ans.Steps to Install Windows Server 2016 (Server Core Mode)\par
+Step 1: Boot from Installation Media\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 a. Insert the Windows Server 2016 DVD/USB or mount the ISO (if installing on a VM).\par
+{\pntext\f7\'B7\tab}b. Boot the system \f2\u8594?\f1  \f0 Press any key to boot from the media.\par
+{\pntext\f7\'B7\tab}\lang1033 c. Setup will load files.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 2: Choose Language and Preferences\b0\f3\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\f4 Select:\par
+{\pntext\f7\'B7\tab}\f0 a. Language to install\par
+{\pntext\f7\'B7\tab}b. Time and currency format\par
+{\pntext\f7\'B7\tab}c. Keyboard/input method\par
+{\pntext\f7\'B7\tab}d. Click Next \f2\u8594?\f1  \f0 then click Install Now.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 3: Enter Product Key\b0\f4\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\f0\lang1033 a. Enter the product key, or click I don\f4\rquote\f0 t have a product key to continue with evaluation mode.\f4\par
+
+\pard\sa200\sl276\slmult1\qj\b\f0 Step 4: Select Edition and Installation Type\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Choose the edition without Desktop Experience (for Server Core):\par
+{\pntext\f7\'B7\tab}b. Windows Server 2016 Standard (Server Core Installation)\par
+{\pntext\f7\'B7\tab}c. Windows Server 2016 Datacenter (Server Core Installation\f4 )\par
+{\pntext\f7\'B7\tab}\f0 d. Make sure you select Server Core, otherwise you\f1\rquote\f0 ll get the GUI (Desktop Experience).\par
+{\pntext\f7\'B7\tab}e. Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 5: Accept License Terms\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Check I accept the license terms.\par
+{\pntext\f7\'B7\tab}b. Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 6: Choose Installation Type\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Select:\par
+{\pntext\f7\'B7\tab}\b0 a. Custom: Install Windows only (advanced) for fresh installation.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 7: Select Partition/Disk\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj a. Choose the target hard drive or partition.\par
+{\pntext\f7\'B7\tab}b. Format or create partitions as needed.\par
+{\pntext\f7\'B7\tab}c. Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 8: Installation Process\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 a. Setup copies files and installs Windows.\par
+{\pntext\f7\'B7\tab}b. The system will reboot automatically several times.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 9: Initial Setup (Command Line Only)\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0  After reboot, you\f1\rquote\f0 ll see a black command-line screen (no GUI).\par
+{\pntext\f7\'B7\tab}Set a strong Administrator password when prompted.\par
+{\pntext\f7\'B7\tab}Login with Ctrl + Alt + Delete \f2\u8594?\f1  \f0 Administrator credentials.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 10: Basic Configuration using Commands\b0\f4\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\f3\lang1033 Now configure the server using command-line tools:\par
+
+\pard\sa200\sl276\slmult1\qj\b Rename Computer:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj hostname\par
+{\pntext\f7\'B7\tab}Rename-Computer -NewName "ServerCore01"\par
+{\pntext\f7\'B7\tab}Set Static IP:\par
+{\pntext\f7\'B7\tab}New-NetIPAddress -InterfaceIndex 12 -IPAddress 192.168.1.10 -PrefixLength 24 -DefaultGateway 192.168.1.1\par
+{\pntext\f7\'B7\tab}Set DNS Server: \f4 Set-DnsClientServerAddress -InterfaceIndex 12 -Server\f3  \f4 Addresses\f3  \f4 192.168.1.2\par
+{\pntext\f7\'B7\tab}Enable Remote Desktop (optional):\f3  \f4 cscript %windir%\\system32\\scregedit.wsf /ar 0\par
+{\pntext\f7\'B7\tab}Use sconfig (Server Configuration tool) for easier configuration:\par
+{\pntext\f7\'B7\tab}sconfig\par
+{\pntext\f7\'B7\tab}This lets you configure hostname, domain join, updates, remote management, etc.\par
+
+\pard\sa200\sl276\slmult1\qj\b\f0 19. How do you configure network settings during Windows Server 2016 installation?\b0\par
+Ans. \b 1. During Installation\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 During\f3  \f0 the\f3  \f0 setup\f3  \f0 process\f3  \f0 itself\f3 , \f0 Windows\f3  \f0 Server\f3  \f0 2016\f3  \f0 does\f3  \f0 not\f3  \f0 prompt\f3  \f0 you\f3  \f0 for\f3  \f0 detailed\f3  \f0 network\f3  \f0 settings\f3  (\f0 like\f3  \f0 IP\f3 , \f0 DNS\f3 , \f0 Gateway\f3 ).\f0\par
+{\pntext\f7\'B7\tab}By\f3  \f0 default\f3 , \f0 the\f3  \f0 server\f3  \f0 installs\f3  \f0 with\f3  \f0 DHCP\f3  \f0 enabled\f3  (\f0 it\f3  \f0 will\f3  \f0 try\f3  \f0 to\f3  \f0 get\f3  \f0 an\f3  \f0 IP\f3  \f0 from\f3  \f0 a\f3  \f0 DHCP\f3  \f0 server\f3 ).\f0\par
+{\pntext\f7\'B7\tab}If\f3  \f0 no\f3  \f0 DHCP\f3  \f0 server\f3  \f0 exists\f3 , \f0 it\f3  \f0 assigns\f3  \f0 an\f3  \f0 APIPA\f3  \f0 address\f3  (\f0 169\f3 .\f0 254\f3 .\f0 x\f3 .\f0 x\f3 ).\f0\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. After Installation \f4\endash\f1  \f0 In GUI Mode (Desktop Experience)\f4\par
+\f0 Open Network Settings:\b0\f4\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Right-click the network icon in the taskbar \f2\u8594? Open Network and Sharing Center\par
+{\pntext\f7\'B7\tab}\f4\lang1033 Or go to: Control Panel \f2\u8594? Network and Sharing Center \u8594? Change adapter settings\par
+
+\pard\sa200\sl276\slmult1\qj\b\f0 Select Network Adapter:\b0\f4\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\f3\lang1033 Right-click the correct adapter \f2\u8594? Properties\par
+
+\pard\sa200\sl276\slmult1\qj\b\f0 Configure IPv4 Settings:\b0\f4\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\f3\lang1033 Select Internet Protocol Version 4 (TCP/IPv4) \f2\u8594? Properties\par
+{\pntext\f7\'B7\tab}\f4\lang1033 Choose Use the following IP address:\par
+{\pntext\f7\'B7\tab}Enter IP Address (e.g., 192.168.1.10)\par
+{\pntext\f7\'B7\tab}Enter Subnet Mask (e.g., 255.255.255.0)\par
+{\pntext\f7\'B7\tab}Enter Default Gateway (e.g., 192.168.1.1)\par
+{\pntext\f7\'B7\tab}Choose Use the following DNS server addresses:\par
+{\pntext\f7\'B7\tab}Preferred DNS: (e.g., 192.168.1.2 or 8.8.8.8)\par
+{\pntext\f7\'B7\tab}Alternate DNS: optional\par
+{\pntext\f7\'B7\tab}Click OK \f2\u8594? Close \u8594? Restart the adapter.\par
+
+\pard\sa200\sl276\slmult1\qj\b\f0 3. After Installation \f4\endash\f1  \f0 In Server Core Mode (No GUI)\b0\f4\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\f3\lang1033  \f4 Check Network Adapters:\par
+{\pntext\f7\'B7\tab}\f3  \f4 Get-NetAdapter\par
+{\pntext\f7\'B7\tab}\f3  \f4 Assign Static IP:\par
+{\pntext\f7\'B7\tab}New-NetIPAddress -InterfaceIndex 12 -IPAddress 192.168.1.10 -PrefixLength 24 -DefaultGateway 192.168.1.1\par
+{\pntext\f7\'B7\tab}\f3  \f4 Set DNS Server:\par
+{\pntext\f7\'B7\tab}Set-DnsClientServerAddress -InterfaceIndex 12 -ServerAddresses 192.168.1.2\par
+{\pntext\f7\'B7\tab}\f3  \f4 Verify Configuration:\f3  \f4 ipconfig /all\par
+{\pntext\f7\'B7\tab}Optional \endash  Use sconfig (simpler):\par
+{\pntext\f7\'B7\tab}Type sconfig in the command prompt.\par
+{\pntext\f7\'B7\tab}Choose Option 8: Network Settings \f2\u8594? select the adapter \u8594? set static IP, subnet, gateway, DNS.\f0\lang1033\par
+
+\pard\sa200\sl276\slmult1\qj\b 20. Explain the process of promoting a Windows Server to a domain controller?\par
+\b0 Ans.1. \b Install the Active Directory Domain Services (AD DS) Role\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Open Server Manager \f2\u8594?\f1  \f0 Manage \f2\u8594?\f1  \f0 Add Roles and Features.\par
+{\pntext\f7\'B7\tab}Select Role-based installation \f2\u8594?\f1  \f0 choose the local server.\par
+{\pntext\f7\'B7\tab}Check Active Directory Domain Services (AD DS).\par
+{\pntext\f7\'B7\tab}Add required features \f2\u8594?\f1  \f0 Next \f2\u8594?\f1  \f0 Install.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Launch the AD DS Configuration Wizard\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj After installation, click the notification flag in Server Manager.\par
+{\pntext\f7\'B7\tab}Select Promote this server to a domain controller.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Choose Deployment Type\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Options available:\par
+{\pntext\f7\'B7\tab}Add a domain controller to an existing domain\par
+{\pntext\f7\'B7\tab}Add a new domain to an existing forest\par
+{\pntext\f7\'B7\tab}Add a new forest (if setting up the first DC)\par
+{\pntext\f7\'B7\tab}For a brand-new domain, choose Add a new forest and provide a root domain name (e.g., example.local).\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Configure Domain Controller Options\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Choose Forest Functional Level and Domain Functional Level (default: Windows Server 2016).\par
+{\pntext\f7\'B7\tab}Select:\par
+{\pntext\f7\'B7\tab}Domain Name System (DNS) server (optional but recommended).\par
+{\pntext\f7\'B7\tab}Global Catalog (GC) (default, required for the first DC).\par
+{\pntext\f7\'B7\tab}Set a Directory Services Restore Mode (DSRM) password (for recovery).\par
+
+\pard\sa200\sl276\slmult1\qj\b 5. Specify Additional Options\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Configure DNS delegation if required (ignore if it\f4\rquote\f0 s the first DC).\par
+{\pntext\f7\'B7\tab}Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b 6. Specify Paths\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Define locations for:\par
+{\pntext\f7\'B7\tab}Database folder\par
+{\pntext\f7\'B7\tab}Log files folder\par
+{\pntext\f7\'B7\tab}SYSVOL folder\par
+{\pntext\f7\'B7\tab}(Defaults are usually fine: C:\\Windows\\NTDS).\par
+
+\pard\sa200\sl276\slmult1\qj\b 7. Review and Run Prerequisite Check\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Review your configuration.\par
+{\pntext\f7\'B7\tab}Run the prerequisite check \f2\u8594?\f1  \f0 ensure there are no critical errors.\par
+{\pntext\f7\'B7\tab}Click Install.\par
+
+\pard\sa200\sl276\slmult1\qj\b 8. Server Reboots\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj The server automatically reboots after promotion.\par
+{\pntext\f7\'B7\tab}Once restarted, it becomes a Domain Controller.\par
+
+\pard\sa200\sl276\slmult1\qj\b 9. Post-Installation Verification\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Log in with domain credentials (domain\\Administrator).\par
+{\pntext\f7\'B7\tab}Verify in Server Manager \f2\u8594?\f1  \f0 Tools:\par
+{\pntext\f7\'B7\tab}Active Directory Users and Computers (ADUC)\par
+{\pntext\f7\'B7\tab}DNS Manager\par
+{\pntext\f7\'B7\tab}Ensure AD DS and DNS services are running.\lang1033\par
+
+\pard\sa200\sl276\slmult1\qj\b 21. Discuss the steps involved in upgrading from a previous version of Windows Server to Windows Server 2016?\par
+\b0 Ans. Steps to Upgrade to Windows Server 2016\par
+\b 1. Verify Upgrade Path\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Supported in-place upgrades:\par
+{\pntext\f7\'B7\tab}Windows Server 2012 \f2\u8594?\f0  Windows Server 2016\par
+{\pntext\f7\'B7\tab}Windows Server 2012 R2 \f2\u8594?\f0  Windows Server 2016\par
+{\pntext\f7\'B7\tab}You cannot upgrade directly from Windows Server 2008/R2 or older. Those require migration or a step-up upgrade.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Prepare for Upgrade\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Check system requirements: CPU, RAM, storage (minimum 32 GB).\par
+{\pntext\f7\'B7\tab}Update the existing server with latest patches and service packs.\par
+{\pntext\f7\'B7\tab}Check application/role compatibility (some roles may need reinstallation).\par
+{\pntext\f7\'B7\tab}Backup the server (system state + data).\par
+{\pntext\f7\'B7\tab}Disable or temporarily remove third-party antivirus/security software.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Insert Installation Media\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Insert the Windows Server 2016 DVD/USB or mount the ISO.\par
+{\pntext\f7\'B7\tab}Run setup.exe from the media.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Start Installation Wizard\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Choose Download updates, drivers, and optional features (recommended).\par
+{\pntext\f7\'B7\tab}Enter product key.\par
+{\pntext\f7\'B7\tab}Select the correct edition (Standard/Datacenter, Core/Desktop Experience).\par
+
+\pard\sa200\sl276\slmult1\qj\b 5. Choose Upgrade Option\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj When prompted, select:\par
+{\pntext\f7\'B7\tab}Keep personal files and apps (this performs the in-place upgrade).\par
+{\pntext\f7\'B7\tab}If you select "Nothing," it will be a clean install (not upgrade).\b\par
+
+\pard\sa200\sl276\slmult1\qj 6. Accept License Terms\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Read and accept Microsoft Software License Terms.\par
+
+\pard\sa200\sl276\slmult1\qj\b 7. Compatibility Check\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Setup runs a check for application and driver compatibility.\par
+{\pntext\f7\'B7\tab}Fix any issues reported (e.g., uninstall unsupported apps).\par
+
+\pard\sa200\sl276\slmult1\qj\b 8. Install Upgrade\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Click Install.\par
+{\pntext\f7\'B7\tab}The upgrade process copies files, installs features, and migrates roles.\par
+{\pntext\f7\'B7\tab}Server reboots multiple times.\par
+
+\pard\sa200\sl276\slmult1\qj\b 9. Post-Upgrade Configuration\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Log in with the same credentials.\par
+{\pntext\f7\'B7\tab}Verify that roles (AD DS, DNS, DHCP, IIS, etc.) are working.\par
+{\pntext\f7\'B7\tab}Reapply group policies, firewall rules, and settings if needed.\par
+{\pntext\f7\'B7\tab}Install the latest Windows Updates and drivers for Server 2016.\b\lang1033\par
+
+\pard\sa200\sl276\slmult1\qj 22. What is Active Directory Domain Services (AD DS), and what are its key components?\lang1033\par
+\b0 Ans. \b Active Directory Domain Services (AD DS)\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 A directory service in Windows Server that stores and manages information about users, computers, and resources.\par
+{\pntext\f7\'B7\tab}Provides authentication, authorization, and centralized management.\par
+
+\pard\sa200\sl276\slmult1\qj\b Key Components:\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Domain \f1\endash\f0  Logical group of objects (users, computers, etc.).\par
+{\pntext\f7\'B7\tab}Tree \f1\endash\f0  Collection of domains in a hierarchy.\par
+{\pntext\f7\'B7\tab}Forest \f1\endash\f0  Highest-level container with multiple trees.\par
+{\pntext\f7\'B7\tab}Organizational Units (OUs) \f1\endash\f0  Containers to organize objects and apply policies.\par
+{\pntext\f7\'B7\tab}Objects \f1\endash\f0  Users, groups, computers, printers.\par
+{\pntext\f7\'B7\tab}Schema \f1\endash\f0  Rules/definitions of objects and attributes.\par
+{\pntext\f7\'B7\tab}Global Catalog \f1\endash\f0  Searchable index of all objects in a forest.\par
+{\pntext\f7\'B7\tab}Domain Controllers (DCs) \f1\endash\f0  Servers that store AD DS and handle authentication.\b\par
+
+\pard\sa200\sl276\slmult1\qj 23. How do you create a new Active Directory user account in Windows Server ?\par
+\b0 Ans. \b Method 1: Using Active Directory Users and Computers (GUI)\par
+Open ADUC Tool\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Go to Server Manager \f2\u8594?\f0  Tools \f2\u8594?\f0  Active Directory Users and Computers.\par
+
+\pard\sa200\sl276\slmult1\qj\b Select OU (Organizational Unit)\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Expand your domain \f2\u8594?\f0  choose the OU where you want to create the user.\par
+
+\pard\sa200\sl276\slmult1\qj\b Create New User\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Right-click the OU \f2\u8594?\f0  New \f2\u8594?\f0  User.\par
+
+\pard\sa200\sl276\slmult1\qj\b Enter User Details\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Fill in First name, Last name, User logon name (e.g., jdoe@example.com\lang1033 ). \par
+{\pntext\f7\'B7\tab}Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b Set Password\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Enter and confirm password.\par
+{\pntext\f7\'B7\tab}Choose options:\par
+{\pntext\f7\'B7\tab}User must change password at next logon (default)\par
+{\pntext\f7\'B7\tab}User cannot change password\par
+{\pntext\f7\'B7\tab}Password never expires\par
+{\pntext\f7\'B7\tab}Account is disabled\par
+
+\pard\sa200\sl276\slmult1\qj\b Finish\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Review details \f2\u8594?\f0  Click Finish.\par
+{\pntext\f7\'B7\tab}The new user appears in AD.\par
+
+\pard\sa200\sl276\slmult1\qj\b Method 2: Using PowerShell (Quick Way)\par
+Run in PowerShell:\par
+\b0 New-ADUser -Name "John Doe" -GivenName "John" -Surname "Doe" -SamAccountName jdoe -UserPrincipalName jdoe@example.com -Path "OU=Sales,DC=example,DC=com" -AccountPassword (Read-Host -AsSecureString "Enter Password") -Enabled $true\par
+\b 24. Explain the process of creating and managing Group Policy Objects (GPOs) in Windows Server 2016 or 2019?\par
+\b0 Ans. What is a GPO?\par
+A Group Policy Object (GPO) is a set of rules and configurations applied to users or computers in an Active Directory (AD) environment.\par
+Used to enforce security settings, software installations, desktop restrictions, etc.\par
+GPOs are linked to sites, domains, or organizational units (OUs).\par
+\b Steps to Create and Manage GPOs\b0\par
+\b 1. Open Group Policy Management Console (GPMC)\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Go to Server Manager \f2\u8594?\f0  Tools \f2\u8594?\f0  Group Policy Management.\par
+{\pntext\f7\'B7\tab}The GPMC window opens, showing your forest, domains, and OUs.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Create a New GPO\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj In the left pane, expand your domain.\par
+{\pntext\f7\'B7\tab}Right-click Group Policy Objects \f2\u8594?\f0  New.\par
+{\pntext\f7\'B7\tab}Enter a name for the GPO (e.g., \f2\ldblquote\f0 Password Policy\f2\rdblquote\f0  or \f2\ldblquote\f0 Desktop Restrictions\f2\rdblquote\f0 ).\par
+{\pntext\f7\'B7\tab}The new GPO now appears under Group Policy Objects.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Edit the GPO\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Right-click the GPO \f2\u8594?\f0  Edit.\par
+{\pntext\f7\'B7\tab}The Group Policy Management Editor opens.\par
+{\pntext\f7\'B7\tab}Configure settings under:\par
+{\pntext\f7\'B7\tab}Computer Configuration \f2\u8594?\f0  policies for computers (startup scripts, security, updates).\par
+{\pntext\f7\'B7\tab}User Configuration \f2\u8594?\f0  policies for users (desktop settings, folder redirection, logon scripts).\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Link the GPO\b0\par
+
+\pard\sa200\sl276\slmult1\qj\lang1033 1. Decide where to apply the GPO:\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Site\par
+{\pntext\f7\'B7\tab}Domain\par
+{\pntext\f7\'B7\tab}OU\par
+
+\pard\sa200\sl276\slmult1\qj\lang1033 2. Right-click the target container (e.g., an OU) \f2\u8594?\f0  Link an Existing GPO.\par
+\lang1033 3. Select your GPO \f2\u8594?\f0  OK.\par
+\b 5. Apply and Test the GPO\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Run gpupdate /force on a client to refresh policies.\par
+{\pntext\f7\'B7\tab}Verify applied policies using:\par
+
+\pard\sa200\sl276\slmult1\qj gpresult /r\par
+or\par
+Get-GPResultantSetOfPolicy -ReportType Html -Path C:\\GPReport.html\par
+\b 6. Manage GPOs\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b Enable/Disable GPO: \b0 Right-click GPO \f2\u8594?\f0  Enable/Disable.\par
+{\pntext\f7\'B7\tab}\b Enforce GPO\b0 : Prevents lower-level GPOs from overriding it.\par
+{\pntext\f7\'B7\tab}\b Block Inheritance: \b0 Stops higher-level GPOs from applying to an OU.\par
+{\pntext\f7\'B7\tab}\b Backup/Restore GPOs: \b0 Right-click GPO \f2\u8594?\f0  Back Up / Import Settings.\par
+{\pntext\f7\'B7\tab}\b Delegate Control: \b0 Assign permissions for who can edit or link GPOs\b .\par
+
+\pard\sa200\sl276\slmult1\qj 25\f3 . \f0 What\f3  \f0 are\f3  \f0 Organizational\f3  \f0 Units\f3  (\f0 OUs\f3 ) \f0 in\f3  \f0 Active\f3  \f0 Directory\f3 , \f0 and\f3  \f0 how\f3  \f0 do\f3  \f0 you\f3  \f0 use them\f3 ?\par
+\b0\f0 Ans. What are Organizational Units (OUs)?\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj An Organizational Unit (OU) is a container object in Active Directory used to organize users, groups, computers, and other OUs within a domain.\par
+{\pntext\f7\'B7\tab}Think of it like a folder inside AD that helps manage and apply policies in a structured way.\par
+{\pntext\f7\'B7\tab}OUs do not have separate security boundaries (unlike domains) \u8594? they are mainly for organization and administration.\par
+
+\pard\sa200\sl276\slmult1\qj\b How are OUs Used?\par
+1. Organizing AD Objects\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Group related users, computers, or groups in one OU for easy management.\par
+{\pntext\f7\'B7\tab}Example: Create OUs like HR, IT, Sales, or Computers.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Delegating Administration\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj You can assign limited permissions to junior admins or department heads only on a specific OU.\par
+{\pntext\f7\'B7\tab}Example: HR team can manage accounts only in the HR OU, not the whole domain.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Applying Group Policies (GPOs)\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj GPOs can be linked to OUs to enforce specific rules/settings.\par
+{\pntext\f7\'B7\tab}Example: Apply stricter security policies to the Finance OU but not the Sales OU.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Simplifying Management\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Easier to locate and manage AD objects when structured in OUs.\par
+{\pntext\f7\'B7\tab}Supports nesting \u8594? OUs can contain other OUs.\par
+{\pntext\f7\'B7\tab}Example: OU = Sales \u8594? Sub-OU = Regional Sales.\b\par
+
+\pard\sa200\sl276\slmult1\qj 26. Describe the process of delegating administrative privileges in Active Directory?\par
+\b0 Ans. What is Delegation in AD?\par
+Delegation in Active Directory means giving specific administrative rights to a user or group so they can manage only certain objects (like users, groups, or computers) within an OU, without giving them full domain admin rights.\par
+Example: HR team can reset passwords only for HR employees, but not for IT staff.\par
+\b Steps to Delegate Administrative Privileges\par
+1. Open Active Directory Users and Computers (ADUC)\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Go to Server Manager \u8594? Tools \u8594? Active Directory Users and Computers.\par
+{\pntext\f7\'B7\tab}Expand your domain.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Select the Target OU\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Locate the OU (Organizational Unit) where you want to delegate\par
+{\pntext\f7\'B7\tab}permissions.\par
+{\pntext\f7\'B7\tab}Example: OU = Sales Department.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Start the Delegation Wizard\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Right-click the OU \u8594? Select Delegate Control.\par
+{\pntext\f7\'B7\tab}This opens the Delegation of Control Wizard.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Choose Users or Groups\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Click Add \u8594? select the user(s) or security group(s) you want to delegate rights to.\par
+{\pntext\f7\'B7\tab}Example: Add HR_Admins group.\par
+{\pntext\f7\'B7\tab}Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b 5. Assign Tasks\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Wizard gives common delegation options, such as:\par
+{\pntext\f7\'B7\tab}Reset user passwords and force password change at next logon\par
+{\pntext\f7\'B7\tab}Create, delete, and manage user accounts\par
+{\pntext\f7\'B7\tab}Modify group membership\par
+{\pntext\f7\'B7\tab}Manage Group Policy links\par
+{\pntext\f7\'B7\tab}You can also choose Create a custom task to delegate for more granular control.\par
+{\pntext\f7\'B7\tab}Select the desired option(s) \u8594? Click Next.\par
+
+\pard\sa200\sl276\slmult1\qj\b 6. Finish\b0\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Review your selections \u8594? Click Finish.\par
+{\pntext\f7\'B7\tab}The selected users/groups now have delegated rights on that OU.\par
+
+\pard\sa200\sl276\slmult1\qj\b 7. Verify Delegation\par
+
+\pard{\pntext\f7\'B7\tab}{\*\pn\pnlvlblt\pnf7\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Right-click the OU \u8594? Properties \u8594? Security tab \u8594? check assigned permissions.\b\par
+
+\pard\sa200\sl276\slmult1\qj\b0\f2\par
+\par
+\b\f0\lang1033\par
+\par
+}
+ 
