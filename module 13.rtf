@@ -1,0 +1,332 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Calibri;}{\f2\fnil\fcharset1 Cambria Math;}{\f3\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mmathFont2\mwrapIndent1440 }\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\qc\ul\b\f0\fs28\lang9 Module: 13- Networking with Windows Server\par
+\par
+
+\pard\sa200\sl276\slmult1\qj\ulnone 1.Discuss the role of Windows Firewall in Windows Server and how to configure it?\par
+\b0 Ans.\b Role of Windows Firewall in Windows Server\par
+\b0 Windows Firewall is a built-in security feature in Windows Server that controls incoming and outgoing network traffic. Its main roles are:\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b Traffic Filtering \b0\f1\endash\f0  It allows or blocks network connections based on predefined security rules (IP address, port, protocol, etc.).\par
+{\pntext\f3\'B7\tab}\b Protects Against Unauthorized Access \b0\f1\endash\f0  Prevents malicious software or users from gaining access to the server.\par
+{\pntext\f3\'B7\tab}\b Policy Enforcement \b0\f1\endash\f0  Supports Group Policy for centralized management across a domain.\par
+{\pntext\f3\'B7\tab}\b Application Control \b0\f1\endash\f0  Allows or blocks specific applications or services from communicating over the network.\par
+{\pntext\f3\'B7\tab}\b Integration with Security \b0\f1\endash\f0  Works with IPSec, VPN, and other security tools to provide a layered defense.\par
+
+\pard\sa200\sl276\slmult1\qj\b How to Configure Windows Firewall in Windows Server\par
+You can configure Windows Firewall in several ways:\par
+\b0 1. Through Graphical User Interface (GUI)\par
+\b Step 1: \b0 Open Server Manager \f2\u8594?\f0  Click Tools \f2\u8594?\f0  Select Windows Defender Firewall with Advanced Security.\par
+\b Step 2: \b0 In the console, you\rquote ll see:\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b Inbound Rules \b0 (control incoming traffic)\par
+{\pntext\f3\'B7\tab}\b Outbound Rules \b0 (control outgoing traffic)\par
+{\pntext\f3\'B7\tab}\b Connection Security Rules \b0 (used with IPSec for authentication)\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 3: \b0 To create a new rule:\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Right-click Inbound Rules \f2\u8594?\f0  Click New Rule.\par
+{\pntext\f3\'B7\tab}Choose the rule type (Port, Program, Predefined, or Custom).\par
+{\pntext\f3\'B7\tab}Define conditions (e.g., allow TCP Port 80 for web server).\par
+{\pntext\f3\'B7\tab}Set action: Allow, Block, or Allow if secure.\par
+{\pntext\f3\'B7\tab}Name the rule and finish.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 4: \b0 Test the firewall rule by trying to connect to the server service.\par
+2. Using Command Line (netsh)\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Open Command Prompt (Admin).\par
+{\pntext\f3\'B7\tab}Example: To allow incoming traffic on port 3389 (Remote Desktop):\par
+
+\pard\sa200\sl276\slmult1\qj\b CMD:\b0 - netsh advfirewall firewall add rule name="Allow RDP" protocol=TCP dir=in localport=3389 action=allow\par
+\b 3. Using PowerShell\b0\par
+PowerShell is more modern and preferred in automation:\par
+Example: Allow HTTP (port 80) traffic:\par
+\b CMD:- \b0 New-NetFirewallRule -DisplayName "Allow HTTP" -Direction Inbound -Protocol TCP -LocalPort 80 -Action Allow\par
+Example: Block a specific IP:\par
+\b CMD:- \b0 New-NetFirewallRule -DisplayName "Block Malicious IP" -Direction Inbound -RemoteAddress 192.168.1.50 -Action Block\par
+\b 4. Using Group Policy (For Domain Environments)\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Open Group Policy Management Console (GPMC) on Domain Controller.\par
+{\pntext\f3\'B7\tab}Navigate to: Computer Configuration \f2\u8594?\f0  Policies \f2\u8594?\f0  Windows Settings \f2\u8594?\f0  Security Settings \f2\u8594?\f0  Windows Defender Firewall with Advanced Security\par
+{\pntext\f3\'B7\tab}Configure inbound/outbound rules and apply them to multiple servers at once.\ul\fs22\lang9\par
+
+\pard\sa200\sl276\slmult1\qj\ulnone\b\fs28 2.What is Network Address Translation (NAT) in Windows Server, and how do you configure it?\par
+\b0 Ans. NAT (Network Address Translation) is a networking feature in Windows Server that allows private IP addresses (inside a LAN) to communicate with external networks (like the internet) by mapping them to a public IP address.\par
+\b Roles of NAT:\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b Internet Sharing \endash  \b0 Allows multiple internal devices to access the internet using a single public IP.\par
+{\pntext\f3\'B7\tab}\b Security \endash  \b0 Hides internal IP addresses from external networks.\b\par
+{\pntext\f3\'B7\tab}Efficient IP Use \endash  \b0 Saves public IPv4 addresses by using private addressing internally.\par
+{\pntext\f3\'B7\tab}\b Server Publishing \endash  \b0 Allows external users to access internal servers (via Port Forwarding).\par
+
+\pard\sa200\sl276\slmult1\qj\b How to Configure NAT in Windows Server\b0\par
+You configure NAT using the Routing and Remote Access Service (RRAS) role.\par
+\b Step 1: Install RRAS Role\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Open Server Manager \f2\u8594?\f0\lang9  Click Manage \f2\u8594?\f0\lang9  Add Roles and Features.\par
+{\pntext\f3\'B7\tab}Select Remote Access role.\par
+{\pntext\f3\'B7\tab}Under Role Services, select Routing.\par
+{\pntext\f3\'B7\tab}Complete installation.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 2: Configure RRAS for NAT\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Open Server Manager \b\f2\u8594?\f0\lang9  \b0 Tools \f2\u8594?\f0\lang9  Routing and Remote Access.\par
+{\pntext\f3\'B7\tab}Right-click the server name \b\f2\u8594?\f0\lang9  \b0 Configure and Enable Routing and Remote Access.\par
+{\pntext\f3\'B7\tab}The wizard opens \b\f2\u8594?\f0\lang9  \b0 Select NAT option.\par
+{\pntext\f3\'B7\tab}Choose the public interface (the one connected to the internet) \f2\u8594?\f0\lang9  enable NAT on it.\tab\par
+{\pntext\f3\'B7\tab}Choose the private interface (the LAN network).\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 3: Verify Configuration\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj On the NAT-enabled interface, RRAS will translate requests from private IPs (e.g., 192.168.1.10) to the public IP (e.g., 203.0.113.5).\par
+{\pntext\f3\'B7\tab}Clients on the LAN should now be able to access the internet.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 4 (Optional): Configure Port Forwarding\par
+\b0 If you want external users to access an internal server (like a web server on port 80):\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj In RRAS console, expand IPv4 \f2\u8594?\f0\lang9  NAT.\par
+{\pntext\f3\'B7\tab}Right-click the public interface \f2\u8594?\f0\lang9  Properties \f2\u8594?\f0\lang9  Services and Ports tab.\par
+{\pntext\f3\'B7\tab}Add a new service (e.g., TCP port 80 \f2\u8594?\f0\lang9  forward to internal server 192.168.1.20).\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 5: Testing\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj From an internal client (private IP), try browsing the internet.\par
+{\pntext\f3\'B7\tab}For port forwarding, try accessing the public IP from outside; it should redirect to the internal server.\ul\fs22\par
+
+\pard\sa200\sl276\slmult1\qj\ulnone\b\fs28 3.Explain the concept of Dynamic Host Configuration Protocol (DHCP) and how to configure it in Windows Server 2016.\par
+\b0 Ans. DHCP is a network protocol that automatically assigns IP addresses and other network configuration settings (subnet mask, default gateway, DNS, etc.) to client computers in a network.\par
+Instead of manually configuring IP addresses, DHCP does it automatically, reducing errors and saving time.\par
+\b Key Roles of DHCP\b0\par
+\b Automatic IP Assignment \endash  \b0 Assigns IPs from a pool (called a DHCP scope).\par
+\b Avoids Conflicts \endash  \b0 Ensures no two devices get the same IP address.\par
+\b Centralized Management \endash  \b0 All network settings are managed from the DHCP server.\par
+\b Dynamic Updates \endash  \b0 Supports automatic lease renewal and DNS updates.\par
+\b How DHCP Works (Process)\par
+\b0 The process is called DORA:\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b Discover \b0\endash  Client broadcasts a request for an IP.\par
+{\pntext\f3\'B7\tab}\b Offer\b0  \endash  DHCP server responds with an available IP.\par
+{\pntext\f3\'B7\tab}\b Request \b0\endash  Client requests the offered IP.\par
+{\pntext\f3\'B7\tab}\b Acknowledge \b0\endash  DHCP server confirms and assigns the IP.\par
+
+\pard\sa200\sl276\slmult1\qj\b How to Configure DHCP in Windows Server 2016\par
+Step 1: Install the DHCP Server Role\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Open Server Manager \f2\u8594?\f0\lang9  Add Roles and Features.\par
+{\pntext\f3\'B7\tab}Select Role-based or feature-based installation.\par
+{\pntext\f3\'B7\tab}Choose the server.\par
+{\pntext\f3\'B7\tab}From the roles list, select DHCP Server \f2\u8594?\f0\lang9  Next \f2\u8594?\f0\lang9  Install.\par
+{\pntext\f3\'B7\tab}After installation, click Complete DHCP configuration (for authorization).\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 2: Authorize the DHCP Server\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Only authorized DHCP servers can assign IPs in a domain environment.\par
+{\pntext\f3\'B7\tab}In the wizard, authorize the server with Domain Admin credentials.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 3: Configure a DHCP Scope\par
+--> \b0 A scope defines the range of IP addresses the server can lease to clients.\par
+      1. Open DHCP Management Console (from Tools in Server     Manager).\par
+      2. Right-click IPv4 \f2\u8594?\f0\lang9  New Scope.\par
+      3. Define:\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Scope Name \f2\u8594?\f0\lang9  Example: \ldblquote OfficeLAN\rdblquote .\par
+{\pntext\f3\'B7\tab}IP Range \f2\u8594?\f0\lang9  e.g., 192.168.1.100 \endash  192.168.1.200.\par
+{\pntext\f3\'B7\tab}Subnet Mask \f2\u8594?\f0\lang9  e.g., 255.255.255.0.\par
+{\pntext\f3\'B7\tab}Exclusions (optional)\f2\u8594?\f0\lang9  IPs reserved for servers (e.g., 192.168.1.150\endash 160).\par
+{\pntext\f3\'B7\tab}Lease Duration \f2\u8594?\f0\lang9  Default is 8 days.\par
+{\pntext\f3\'B7\tab}Router (Default Gateway) \f2\u8594?\f0\lang9  e.g., 192.168.1.1.\par
+{\pntext\f3\'B7\tab}DNS Server \f2\u8594?\f0\lang9  Internal or external DNS IP.\par
+{\pntext\f3\'B7\tab}WINS Server (if required, otherwise skip).\par
+
+\pard\sa200\sl276\slmult1\qj       4. Activate the scope.\par
+\b Step 4: Test DHCP\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 On a client machine \f2\u8594?\f0\lang9  open Command Prompt \f2\u8594?\f0\lang9  run:\par
+
+\pard\sa200\sl276\slmult1\qj CMD:-\par
+ipconfig /release\par
+ipconfig /renew\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj The client should receive an IP from the DHCP pool\ul\fs22\par
+
+\pard\sa200\sl276\slmult1\qj\ulnone\b\fs28 4. Describe the process of configuring DNS (Domain Name System) in Windows Server?\b0\par
+Ans. DNS (Domain Name System) is a service that translates human-readable domain names (like {{\field{\*\fldinst{HYPERLINK www.example.com }}{\fldrslt{www.example.com\ul0\cf0}}}}\f0\fs28 ) into IP addresses (like 192.168.1.10) that computers use to communicate.\par
+\b In a Windows Server environment, DNS is essential for:\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Active Directory (AD) (AD requires DNS for locating domain controllers).\par
+{\pntext\f3\'B7\tab}Name resolution for internal and external resources.\par
+{\pntext\f3\'B7\tab}Hosting zones for domains and managing records.\par
+
+\pard\sa200\sl276\slmult1\qj\b Steps to Configure DNS in Windows Server\par
+Step 1: Install the DNS Server Role\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Open Server Manager \f2\u8594?\f0  Click Add Roles and Features.\par
+{\pntext\f3\'B7\tab}Choose Role-based or feature-based installation.\par
+{\pntext\f3\'B7\tab}Select your server.\par
+{\pntext\f3\'B7\tab}In Server Roles, check DNS Server \f2\u8594?\f0  Next \f2\u8594?\f0  Install.\par
+{\pntext\f3\'B7\tab}Once installed, open DNS Manager from Tools in Server Manager.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 2: Configure a Forward Lookup Zone\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 A Forward Lookup Zone resolves hostnames \f2\u8594?\f0  IP addresses.\par
+{\pntext\f3\'B7\tab}In DNS Manager, expand the server \f2\u8594?\f0  Right-click Forward Lookup Zones \f2\u8594?\f0  New Zone.\par
+{\pntext\f3\'B7\tab}Choose Primary Zone (integrated with AD if using Active Directory).\par
+{\pntext\f3\'B7\tab}Enter the zone name (e.g., mydomain.local).\par
+{\pntext\f3\'B7\tab}Save zone file (default is fine).\par
+{\pntext\f3\'B7\tab}Select Allow both secure and nonsecure dynamic updates (recommended if not strictly AD-based).\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 3: Add DNS Records\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj A Record (Host Record) \f2\u8594?\f0  Maps a hostname to an IP.\par
+{\pntext\f3\'B7\tab}CNAME Record (Alias) \f2\u8594?\f0  Points one hostname to another.\par
+{\pntext\f3\'B7\tab}MX Record \f2\u8594?\f0  Defines mail server.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 4: Configure a Reverse Lookup Zone (Optional but Recommended)\b0\par
+A Reverse Lookup Zone resolves IP \f2\u8594?\f0  hostname.\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj In DNS Manager, right-click Reverse Lookup Zones \f2\u8594?\f0  New Zone.\par
+{\pntext\f3\'B7\tab}Choose Primary Zone.\par
+{\pntext\f3\'B7\tab}Enter network ID (e.g., 192.168.1).\par
+{\pntext\f3\'B7\tab}Finish wizard.\par
+{\pntext\f3\'B7\tab}Add PTR Records that map IPs back to hostnames.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 5: Configure DNS Forwarders\b0\par
+If your DNS server doesn\f1\rquote\f0 t know how to resolve a query (like for internet sites), it can forward requests to external DNS servers (like Google 8.8.8.8).\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj In DNS Manager \f2\u8594?\f0  Right-click the server \f2\u8594?\f0  Properties.\par
+{\pntext\f3\'B7\tab}Go to Forwarders tab \f2\u8594?\f0  Add IPs of external DNS servers.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 6: Testing DNS\b0\par
+On a client machine, set the Preferred DNS Server to your Windows Server\f1\rquote\f0 s IP.\par
+Run: cmd.\par
+nslookup server1.mydomain.local\par
+If configured correctly, it should return the IP address\par
+\b 5. What is Server Manager, and how do you use it to manage servers in Windows Server?\par
+\b0 Ans. Server Manager is a built-in management tool in Windows Server (2012, 2016, 2019, 2022) that provides a centralized console for managing local and remote servers.\par
+\b It\rquote s mainly used for:\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Installing and managing roles and features.\par
+{\pntext\f3\'B7\tab}Monitoring server performance and health.\par
+{\pntext\f3\'B7\tab}Configuring server settings.\par
+{\pntext\f3\'B7\tab}Managing multiple servers from a single console.\par
+
+\pard\sa200\sl276\slmult1\qj\b Key Features of Server Manager\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Dashboard \endash  Overview of roles, features, and server status.\par
+{\pntext\f3\'B7\tab}Role & Feature Management \endash  Install/uninstall roles like DNS, DHCP, AD DS, IIS.\par
+{\pntext\f3\'B7\tab}Remote Management \endash  Manage multiple servers in the same console.\par
+{\pntext\f3\'B7\tab}Server Groups \endash  Organize servers by role, location, or function.\par
+{\pntext\f3\'B7\tab}Event Monitoring \endash  View alerts, performance issues, and events.\par
+{\pntext\f3\'B7\tab}Performance & Services Control \endash  Start/stop services, check resource usage.\par
+
+\pard\sa200\sl276\slmult1\qj\b How to Use Server Manager\b0\par
+\b 1. Open Server Manager\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj It launches automatically after logging into Windows Server.\par
+{\pntext\f3\'B7\tab}Or open it manually: Start \f2\u8594?\f0  Server Manager.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Add Servers for Management\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Click Manage \f2\u8594?\f0  Add Servers.\par
+{\pntext\f3\'B7\tab}You can add by:\par
+{\pntext\f3\'B7\tab}Active Directory (search servers in the domain).\par
+{\pntext\f3\'B7\tab}DNS (search by hostname/IP).\par
+{\pntext\f3\'B7\tab}Import from a text file.\par
+{\pntext\f3\'B7\tab}Once added, you can manage them remotely.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Install Roles and Features\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Go to Manage \f2\u8594?\f0  Add Roles and Features.\par
+{\pntext\f3\'B7\tab}Use the wizard to:\par
+{\pntext\f3\'B7\tab}Choose Role-based installation.\par
+{\pntext\f3\'B7\tab}Select the target server (local or remote).\par
+{\pntext\f3\'B7\tab}Pick roles (e.g., DNS, DHCP, IIS, AD DS).\par
+{\pntext\f3\'B7\tab}Install features like .NET Framework, Failover Clustering.\par
+{\pntext\f3\'B7\tab}After installation, configuration tools appear under Tools menu.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Monitor Server Health\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Dashboard shows role health and performance alerts.\par
+{\pntext\f3\'B7\tab}All Servers section lets you view CPU, memory, disk usage, and network activity.\par
+{\pntext\f3\'B7\tab}Check Events and Services for warnings or failures.\par
+
+\pard\sa200\sl276\slmult1\qj\b 5. Create and Manage Server Groups\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Click Manage \f2\u8594?\f0  Create Server Group.\par
+{\pntext\f3\'B7\tab}Group servers by function (e.g., \ldblquote Web Servers\rdblquote  or \ldblquote Domain Controllers\rdblquote ).\par
+{\pntext\f3\'B7\tab}Useful for managing large environments.\par
+
+\pard\sa200\sl276\slmult1\qj\b 6. Manage Services and Roles\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Under each server, you can:\par
+{\pntext\f3\'B7\tab}Start/stop/restart services.\par
+{\pntext\f3\'B7\tab}Configure role-specific settings (like DHCP scopes, DNS zones, IIS sites).\ul\b\fs22\lang9\par
+
+\pard\sa200\sl276\slmult1\qj\ulnone\fs28 6. Discuss the role of Remote Desktop Services (RDS) in Windows Server 2016 or 2019 and how to configure it?\par
+\b0 Ans. Remote Desktop Services (RDS) in Windows Server 2016/2019 allows users to remotely connect to a server and run applications, desktops, or full virtual environments as if they were local.\par
+\b Key Roles of RDS\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b Centralized Application Hosting \b0\endash  Run apps on the server, users access them remotely.\par
+{\pntext\f3\'B7\tab}\b Remote Desktop Access \b0\endash  Users connect to a virtual desktop from anywhere.\par
+{\pntext\f3\'B7\tab}\b Cost-Effective \b0\endash  Reduces need for high-performance hardware on client machines.\par
+{\pntext\f3\'B7\tab}\b Security & Control \b0\endash  IT admins can manage apps, updates, and policies centrally.\par
+{\pntext\f3\'B7\tab}\b Supports BYOD (Bring Your Own Device) \b0\endash  Users can connect from PCs, thin clients, or mobile devices.\par
+
+\pard\sa200\sl276\slmult1\qj\b RDS Components\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj RD Session Host (RDSH): \b0 Hosts Windows-based applications or full desktops for remote users.\par
+{\pntext\f3\'B7\tab}\b RD Connection Broker: \b0 Manages user sessions, load balancing, and reconnects users to existing sessions.\par
+{\pntext\f3\'B7\tab}\b RD Web Access: \b0 Provides access to applications or desktops through a web portal.\par
+{\pntext\f3\'B7\tab}\b RD Gateway: \b0 Enables secure remote connections over the internet using HTTPS.\par
+{\pntext\f3\'B7\tab}\b RD Licensing: \b0 Manages Remote Desktop CALs (Client Access Licenses).\par
+
+\pard\sa200\sl276\slmult1\qj\b How to Configure RDS in Windows Server 2016/2019\b0\par
+\b Step 1: Install Remote Desktop Services Role\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Open Server Manager \f2\u8594?\f0  Manage \f2\u8594?\f0  Add Roles and Features.\par
+{\pntext\f3\'B7\tab}Select Role-based or feature-based installation.\par
+{\pntext\f3\'B7\tab}Choose the target server.\par
+{\pntext\f3\'B7\tab}From the roles list, select Remote Desktop Services \f2\u8594?\f0  Add features.\par
+{\pntext\f3\'B7\tab}Select RDS role services you want (e.g., RD Session Host, RD Licensing, RD Web Access).\par
+{\pntext\f3\'B7\tab}Complete installation.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 2: Configure RD Session Host\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj In Server Manager, go to Remote Desktop Services.\par
+{\pntext\f3\'B7\tab}Deploy Session-based Desktop Deployment (for desktops) or Virtual machine-based deployment (for VDI).\par
+{\pntext\f3\'B7\tab}Assign roles to servers (if you have multiple servers, e.g., one for RD Connection Broker, one for Session Host).\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 3: Configure Licensing\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Open Server Manager \f2\u8594?\f0  Remote Desktop Services \f2\u8594?\f0  Overview.\par
+{\pntext\f3\'B7\tab}Click on RD Licensing \f2\u8594?\f0  Add your license server.\par
+{\pntext\f3\'B7\tab}Activate the license server via RD Licensing Manager.\par
+{\pntext\f3\'B7\tab}Install CALs (User CAL or Device CAL, depending on your licensing model).\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 4: Configure RD Gateway (Optional \f2\endash\f0  for internet access)\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Install RD Gateway role service.\par
+{\pntext\f3\'B7\tab}Configure certificates for secure HTTPS connections.\par
+{\pntext\f3\'B7\tab}Allow users to connect securely over the internet.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 5: Publish Applications or Desktops\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj In Server Manager, go to Remote Desktop Services \f2\u8594?\f0  Collections.\par
+{\pntext\f3\'B7\tab}Create a new Session Collection.\par
+{\pntext\f3\'B7\tab}Add apps or full desktop sessions that users can access.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 6: Provide Access to Users\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Users can connect via:\par
+{\pntext\f3\'B7\tab}Remote Desktop Client (mstsc.exe) \f2\u8594?\f0  enter server\f2\rquote\f0 s IP or FQDN.\par
+{\pntext\f3\'B7\tab}RD Web Access portal \f2\u8594?\f0  login via browser.\par
+{\pntext\f3\'B7\tab}Remote Desktop App on Windows, macOS, iOS, Android.\par
+
+\pard\sa200\sl276\slmult1\qj\b Step 7: Test Connection\b0\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj On a client PC, open Remote Desktop Connection (mstsc).\par
+{\pntext\f3\'B7\tab}Enter server IP/hostname \f2\u8594?\f0  Login with domain credentials.\par
+{\pntext\f3\'B7\tab}User should see either a remote desktop or published apps depending on configuration.\ul\b\fs22\lang9\par
+}
+ 
