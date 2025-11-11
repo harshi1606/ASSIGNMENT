@@ -1,0 +1,230 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset2 Symbol;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\qc\b\f0\fs36\lang9 Module: 14- Identity with Windows Server\fs28\par
+
+\pard\sa200\sl276\slmult1\qj 1. Explain the process of installing and configuring Hyper-V virtualization in Windows Server 2016.\par
+Ans. Installing and Configuring Hyper-V in Windows Server 2016\b0\par
+\b 1.Install the Hyper-V role\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Open Server Manager.\par
+{\pntext\f1\'B7\tab}Select Add Roles and Features.\par
+{\pntext\f1\'B7\tab}Choose Role-based installation.\par
+{\pntext\f1\'B7\tab}Select the server.\par
+{\pntext\f1\'B7\tab}Check Hyper-V.\par
+{\pntext\f1\'B7\tab}Add required features and proceed.\par
+{\pntext\f1\'B7\tab}Restart the server.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Configure Networking\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj In Hyper-V Manager, create a Virtual Switch (External, Internal, Private).\par
+{\pntext\f1\'B7\tab}Bind it to a physical NIC for VM connectivity.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Configure Storage\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Choose folders for storing VM files, VHDs, and snapshots.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Create and Configure VMs\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj New VM.\par
+{\pntext\f1\'B7\tab}Assign CPU, RAM, VHD type, ISO file.\par
+{\pntext\f1\'B7\tab}Install OS, configure integration services.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. How do you monitor server performance and manage event logs in Windows Server?\par
+Ans. Monitoring Server Performance & Managing Event Logs\par
+1. Performance Monitoring\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Use Task Manager, Resource Monitor, and Performance Monitor (PerfMon).\par
+{\pntext\f1\'B7\tab}Track counters like CPU %, Memory usage, Disk queue length, Network throughput.\par
+{\pntext\f1\'B7\tab}Create Data Collector Sets for long-term monitoring.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Event Logs\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Open Event Viewer.\par
+{\pntext\f1\'B7\tab}Check System, Application, Security, Directory Services, DNS, and Hyper-V logs.\par
+{\pntext\f1\'B7\tab}Filter logs, create custom views, and enable log forwarding to a central server.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Describe the different types of storage options available in Windows Server.\par
+Ans. Storage Options in Windows Server\par
+1. Basic Storage\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Local disks, partitions, volumes.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. Storage Spaces\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Pools of physical disks.\par
+{\pntext\f1\'B7\tab}Types: Simple, Mirror, Parity.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. SAN (Storage Area Network)\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 iSCSI or Fibre Channel based external storage.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. NAS (Network Attached Storage)\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj File sharing over network.\par
+
+\pard\sa200\sl276\slmult1\qj\b 5. ReFS (Resilient File System)\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Corruption-resistant file system.\par
+
+\pard\sa200\sl276\slmult1\qj\b 6. Clustered Storage\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Storage for Failover Clusters.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. What is the role of File Server in Windows Server, and how do you configure it?\par
+
+\pard\sa200\sl276\slmult1\qj Ans. Role of File Server & Configuration\par
+1. Role\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Provides file sharing over network.\par
+{\pntext\f1\'B7\tab}Central storage for users and applications.\par
+{\pntext\f1\'B7\tab}Controls permissions, quotas, and access policies.\par
+
+\pard\sa200\sl276\slmult1\qj Configuration\par
+
+\pard\sa200\sl276\slmult1\qj 1. Install File and Storage Services role.\par
+2. Create a Shared Folder.\par
+3. Set NTFS permissions and Share permissions.\par
+4. Enable features like:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj File Server Resource Manager (FSRM)\par
+{\pntext\f1\'B7\tab}Shadow Copies\par
+{\pntext\f1\'B7\tab}Access-based Enumeration\par
+{\pntext\f1\'B7\tab}Quotas\par
+
+\pard\sa200\sl276\slmult1\qj\b 5. Explain the process of implementing and managing Distributed File System (DFS) in Windows Server 2016.\par
+Ans. Implementing and Managing DFS (Distributed File System)\par
+DFS Components\par
+\b0 1. DFS Namespace (DFS-N): Creates a unified folder structure.\par
+2. DFS Replication (DFS-R): Replicates folders between servers.\par
+\b Steps:\b0\par
+
+\pard\sa200\sl276\slmult1\qj 1. Install DFS Namespaces and DFS Replication.\par
+2. Create a DFS Namespace:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Stand-alone or Domain-based.\par
+
+\pard\sa200\sl276\slmult1\qj 3. Add Folder Targets (real shared folders).\par
+4. Configure DFS Replication Group:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Add member servers.\par
+{\pntext\f1\'B7\tab}Choose replication topology (Hub/Spoke, Full mesh).\par
+{\pntext\f1\'B7\tab}Set schedules and bandwidth.\par
+
+\pard\sa200\sl276\slmult1\qj\b 6. Discuss the built-in backup and recovery options available in Windows Server 2016 or 2019.\par
+Ans. Built-in Backup & Recovery Options (Server 2016/2019)\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 Windows Server Backup\par
+{\pntext\f1\'B7\tab}System State Backup\par
+{\pntext\f1\'B7\tab}Bare-metal Recovery\par
+{\pntext\f1\'B7\tab}Volume Shadow Copy Service (VSS)\par
+{\pntext\f1\'B7\tab}Recovery Environment (WinRE)\par
+{\pntext\f1\'B7\tab}Hyper-V VM backups\par
+{\pntext\f1\'B7\tab}Backup to local disk, network share, or external disk\par
+
+\pard\sa200\sl276\slmult1\qj\b 7. How do you configure Windows Server Backup to back up critical data?\par
+
+\pard\sa200\sl276\slmult1\qj Ans. Configuring Windows Server Backup\par
+\b0 1. Install Windows Server Backup.\par
+2. Open it and choose Backup Schedule or One-time Backup.\par
+3. Select Full Server, Custom, or System State.\par
+4. Choose storage location:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Local disk\par
+{\pntext\f1\'B7\tab}External drive\par
+{\pntext\f1\'B7\tab}Network share\par
+
+\pard\sa200\sl276\slmult1\qj 5. Set schedule, confirmation, and finish.\par
+\b 8. Explain the steps for restoring files and folders using Windows Server Backup.\par
+Ans. Restoring Files/Folders with Windows Server Backup\par
+\b0 1. Open Windows Server Backup.\par
+2. Select Recover.\par
+3. Choose backup location.\par
+4. Select Files and Folders recovery.\par
+5. Browse to items.\par
+6. Restore:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj To original location, or\par
+{\pntext\f1\'B7\tab}Alternate location.\par
+
+\pard\sa200\sl276\slmult1\qj 7.Confirm and complete.\par
+\b 9. What are some common troubleshooting techniques for Windows Server startup issues?\par
+Ans. Common Troubleshooting for Startup Issues\par
+\b0 1. Check Safe Mode (F8).\par
+2. Use Last Known Good Configuration.\par
+3. Repair boot files with:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj bootrec /fixmbr\par
+{\pntext\f1\'B7\tab}bootrec /fixboot\par
+{\pntext\f1\'B7\tab}bootrec /rebuildbcd\par
+
+\pard\sa200\sl276\slmult1\qj 4. Check faulty drivers or services.\par
+5. Inspect Event Viewer after boot.\par
+6. Disconnect external hardware.\par
+7. Check system disk health.\par
+\b 10. How do you troubleshoot network connectivity problems in Windows Server?\par
+Ans. Troubleshooting Network Connectivity Issues\par
+\b0 1. Verify NIC status in Network and Sharing Center.\par
+2. Use commands:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj ipconfig /all\par
+{\pntext\f1\'B7\tab}ping\par
+{\pntext\f1\'B7\tab}tracert\par
+{\pntext\f1\'B7\tab}nslookup\par
+
+\pard\sa200\sl276\slmult1\qj 3. Check DNS settings.\par
+4. Validate default gateway.\par
+5. Restart network services:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj net stop dnscache\par
+{\pntext\f1\'B7\tab}net start dnscache\par
+
+\pard\sa200\sl276\slmult1\qj 6. Disable/enable NIC.\par
+7. Review firewall settings.\par
+8. Check switch/port connectivity.\b\par
+11. Discuss common Active Directory-related issues and their troubleshooting steps.\par
+Ans. Common Active Directory Issues & Fixes\par
+1. Replication issues\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj\b0 repadmin /replsummary\par
+{\pntext\f1\'B7\tab}Fix DNS misconfigurations.\par
+{\pntext\f1\'B7\tab}Check SYSVOL health.\par
+
+\pard\sa200\sl276\slmult1\qj\b 2. DNS issues\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Ensure AD DNS zones exist.\par
+{\pntext\f1\'B7\tab}Fix forwarders.\par
+
+\pard\sa200\sl276\slmult1\qj\b 3. Account lockouts\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Use Account Lockout tools.\par
+{\pntext\f1\'B7\tab}Check mapped drives and apps holding old passwords.\par
+
+\pard\sa200\sl276\slmult1\qj\b 4. Group Policy not applying\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj gpupdate /force\par
+{\pntext\f1\'B7\tab}gpresult /h report.html\par
+{\pntext\f1\'B7\tab}Fix permissions or replication.\par
+
+\pard\sa200\sl276\slmult1\qj\b 5. Time sync issues\b0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Ensure DC syncs with external NTP.\par
+
+\pard\sa200\sl276\slmult1\qj\b 12. Explain how to troubleshoot performance problems on Windows Server 2016 or 2019.\par
+Ans. Troubleshooting Performance Problems (2016/2019)\par
+\b0 1. Identify resource bottlenecks: CPU, RAM, Disk, Network.\par
+2. Use:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj Task Manager\par
+{\pntext\f1\'B7\tab}Resource Monitor\par
+{\pntext\f1\'B7\tab}Performance Monitor\par
+
+\pard\sa200\sl276\slmult1\qj 3. Check Windows Logs for errors.\par
+4. Inspect services, scheduled tasks, and startups.\par
+5. Check for disk fragmentation (HDD).\par
+6. Monitor disk queue length.\par
+7. Examine network throughput.\par
+8. Check memory leaks in applications.\par
+9. Update drivers and Windows patches.\par
+10.Use Process Explorer for deep analysis\par
+}
+ 
